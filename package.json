@@ -1,0 +1,12 @@
+{
+  "name": "madflow-courses",
+  "version": "1.0.0",
+  "description": "Fetching and processing raw course data for madflow",
+  "main": "index.js",
+  "author": "James Zhang",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "axios": "^0.26.1"
+  }
+}
