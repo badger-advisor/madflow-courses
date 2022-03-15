@@ -128,3 +128,5 @@ dist
 
 # stuff
 .vscode
+__pycache__
+*.json

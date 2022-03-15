@@ -21,13 +21,13 @@ magic_object = {
 
 
 def get_courses(subject="COMP SCI", term="all") -> tuple[int, Courses] | None:
-    """Returns a tuple of number of returned courses and a list of the courses"""
+    """Returns a tuple of (number of returned courses, and a list of the courses)"""
 
     # default payload for all requests
     payload = {
         "queryString": "*",
         "page": 1,
-        "pageSize": 50,
+        "pageSize": 900,
         "sortOrder": "SCORE",
         "selectedTerm": terms.get(term),
         "filters": [{"term": {"subject.subjectCode": subjects.get(subject)}}],
@@ -50,19 +50,14 @@ def get_courses(subject="COMP SCI", term="all") -> tuple[int, Courses] | None:
 
 
 def main():
-    # upcoming_courses = requests.request(
-    #     "POST", url, headers=headers, data=payload
-    # ).json()
+    courses = get_courses("COMP SCI")[1]
 
-    # print(upcoming_courses["hits"][0].keys())
-
-    # with open("courses_raw.json", "w") as f:
-    #     f.write(json.dumps(upcoming_courses))
-    print(get_courses("COMP SCI")[0])
+    try:
+        with open("courses_raw.json", "x") as f:
+            f.write(json.dumps(courses))
+    except:
+        print("file exists")
 
 
-# get all courses
-# get next semester courses
-# update existing courses
 if __name__ == "__main__":
     main()
