@@ -5,10 +5,10 @@ import json
 # Types
 Courses = List[dict]
 
-
+# https://public.enroll.wisc.edu/search
 url = "https://public.enroll.wisc.edu/api/search/v1"
 terms = {"spring2022": "1224", "summer2022": "1226", "fall2022": "1232", "all": "0000"}
-subjects = {"COMP SCI": "266"}
+subjects = {"COMP SCI": "266", "MATH": "600"}
 headers = {"Content-Type": "application/json"}
 
 # no idea why this is needed for specific terms
@@ -23,6 +23,11 @@ magic_object = {
 def get_courses(subject="COMP SCI", term="all") -> tuple[int, Courses] | None:
     """Returns a tuple of (number of returned courses, and a list of the courses)"""
 
+    try:
+        subject_code = subjects[subject]
+    except:
+        raise KeyError("Subject doesn't exist")
+
     # default payload for all requests
     payload = {
         "queryString": "*",
@@ -30,7 +35,7 @@ def get_courses(subject="COMP SCI", term="all") -> tuple[int, Courses] | None:
         "pageSize": 900,
         "sortOrder": "SCORE",
         "selectedTerm": terms.get(term),
-        "filters": [{"term": {"subject.subjectCode": subjects.get(subject)}}],
+        "filters": [{"term": {"subject.subjectCode": subject_code}}],
     }
 
     if term != "all":
@@ -50,10 +55,12 @@ def get_courses(subject="COMP SCI", term="all") -> tuple[int, Courses] | None:
 
 
 def main():
-    courses = get_courses("COMP SCI")[1]
+    subject = "MATH"
+    _, courses = get_courses(subject)
 
     try:
-        with open("courses_raw.json", "x") as f:
+        file_name = "_".join(subject.split())
+        with open(f"courses_raw_{file_name}.json", "x") as f:
             f.write(json.dumps(courses))
     except:
         print("file exists")
