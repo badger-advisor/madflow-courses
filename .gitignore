@@ -130,3 +130,4 @@ dist
 .vscode
 __pycache__
 *.json
+x.py
